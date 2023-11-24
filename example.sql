@@ -3,29 +3,70 @@ CREATE DATABASE nc_snacks;
 
 \c nc_snacks
 
+CREATE TABLE categories(
+    category_id SERIAL PRIMARY KEY,
+    category_name VARCHAR(40) NOT NULL
+);
+
+INSERT INTO categories(category_name)
+VALUES
+('crisps'),
+('pastry'),
+('biscuits'),
+('cake');
+
 CREATE TABLE snacks(
   snack_id SERIAL PRIMARY KEY,
   snack_name VARCHAR(40) NOT NULL,
   snack_description VARCHAR(100),
-  price_in_pence INT
+  price_in_pence INT,
+  category_id INT REFERENCES categories(category_id)
 );
 
 INSERT INTO snacks
-  (snack_name, snack_description, price_in_pence)
+  (snack_name, snack_description, price_in_pence, category_id)
 VALUES
-  ('Party Rings', 'No party is complete without them!', 120),
-  ('Hula Hoops', 'The party ring of the crisp world', 80),
-  ('Pasty', null, 300),
-  ('Gyoza', 'Like a tiny pasty', 450);
+  ('Party Rings', 'No party is complete without them!', 120, 3),
+  ('Hula Hoops', 'The party ring of the crisp world', 80, 1),
+  ('Pasty', null, 300, 2),
+  ('Nice Biscuits', 'More like ''alright'' biscuits', 150, 3),
+  ('Gyoza', 'Like a tiny pasty', 450, 2),
+  ('Vol-au-vents', 'ooh lala!', 320, 2);
 
-SELECT snack_name, price_in_pence FROM snacks
-WHERE price_in_pence BETWEEN 100 AND 400;
+CREATE TABLE vending_machines (
+    vm_id SERIAL PRIMARY KEY,
+    vm_location VARCHAR(100),
+    vm_rating INT
+);
 
-DELETE FROM snacks
-WHERE snack_name = 'Party Rings'
-RETURNING snack_name AS deleted_snack_name;
+INSERT INTO vending_machines(vm_location, vm_rating)
+VALUES 
+('Cobham Services floor 1', 5),
+('The Olympiad, Chippenham', 2),
+('Manchester Arndale', 4),
+('Eureka, Halifax', 5);
 
-UPDATE snacks
-SET snack_description = 'Like a jumbo gyoza'
-WHERE snack_name = 'Pasty'
-RETURNING *;
+CREATE TABLE snacks_vending_machines (
+    snack_id INT REFERENCES snacks(snack_id),
+    vm_id INT REFERENCES vending_machines(vm_id)
+);
+
+INSERT INTO snacks_vending_machines (snack_id, vm_id)
+VALUES
+(1, 1),
+(2, 1),
+(4, 1),
+(1, 2),
+(5, 2),
+(1, 3),
+(3, 2), 
+(3, 3),
+(4, 3),
+(5, 3),
+(6, 3),
+(4, 4),
+(6, 4), 
+(4, 2);
+
+SELECT snack_name AS title, snack_description, price_in_pence, category_name FROM snacks
+JOIN categories ON snacks.category_id = categories.category_id;
