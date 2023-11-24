@@ -33,40 +33,5 @@ VALUES
   ('Gyoza', 'Like a tiny pasty', 450, 2),
   ('Vol-au-vents', 'ooh lala!', 320, 2);
 
-CREATE TABLE vending_machines (
-    vm_id SERIAL PRIMARY KEY,
-    vm_location VARCHAR(100),
-    vm_rating INT
-);
-
-INSERT INTO vending_machines(vm_location, vm_rating)
-VALUES 
-('Cobham Services floor 1', 5),
-('The Olympiad, Chippenham', 2),
-('Manchester Arndale', 4),
-('Eureka, Halifax', 5);
-
-CREATE TABLE snacks_vending_machines (
-    snack_id INT REFERENCES snacks(snack_id),
-    vm_id INT REFERENCES vending_machines(vm_id)
-);
-
-INSERT INTO snacks_vending_machines (snack_id, vm_id)
-VALUES
-(1, 1),
-(2, 1),
-(4, 1),
-(1, 2),
-(5, 2),
-(1, 3),
-(3, 2), 
-(3, 3),
-(4, 3),
-(5, 3),
-(6, 3),
-(4, 4),
-(6, 4), 
-(4, 2);
-
 SELECT snack_name AS title, snack_description, price_in_pence, category_name FROM snacks
 JOIN categories ON snacks.category_id = categories.category_id;
