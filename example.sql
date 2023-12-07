@@ -44,7 +44,7 @@ CREATE TABLE vending_machines (
 
 INSERT INTO vending_machines(vm_location, vm_rating)
 VALUES 
-('Cobham Services floor 1', 5),
+('Cobham Services floor 1', 10),
 ('The Olympiad, Chippenham', 2),
 ('Manchester Arndale', 4),
 ('Eureka, Halifax', 5);
@@ -70,3 +70,10 @@ VALUES
 (4, 4),
 (6, 4), 
 (4, 2);
+
+SELECT AVG(vm_rating) FROM vending_machines;
+
+SELECT (vm_location), COUNT(snack_name) AS no_of_snacks_available FROM snacks_vending_machines
+JOIN vending_machines ON vending_machines.vm_id = snacks_vending_machines.vm_id
+JOIN snacks ON snacks.snack_id = snacks_vending_machines.snack_id
+GROUP BY vm_location;
